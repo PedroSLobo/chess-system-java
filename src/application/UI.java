@@ -12,7 +12,9 @@ import chess.ChessPosition;
 import chess.Color;
 
 public class UI {
-	
+
+	// https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -36,7 +38,7 @@ public class UI {
 	public static void clearScreen() {
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
-		}
+	}	
 	
 	public static ChessPosition readChessPosition(Scanner sc) {
 		try {
@@ -45,7 +47,7 @@ public class UI {
 			int row = Integer.parseInt(s.substring(1));
 			return new ChessPosition(column, row);
 		}
-		catch (RuntimeException e){
+		catch (RuntimeException e) {
 			throw new InputMismatchException("Error reading ChessPosition. Valid values are from a1 to h8.");
 		}
 	}
@@ -55,31 +57,34 @@ public class UI {
 		System.out.println();
 		printCapturedPieces(captured);
 		System.out.println();
-		System.out.print("Turn: " + chessMatch.getTurn());
-		System.out.println();
-		System.out.print("Waitint player: " + chessMatch.getCurrentPlayer());
-		if (chessMatch.getCheck()) {
-			System.out.println();
-			System.out.println("CHECK!");
+		System.out.println("Turn : " + chessMatch.getTurn());
+		if (!chessMatch.getCheckMate()) {
+			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
+			if (chessMatch.getCheck()) {
+				System.out.println("CHECK!");
+			}
 		}
-	
+		else {
+			System.out.println("CHECKMATE!");
+			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
+		}
 	}
 	
 	public static void printBoard(ChessPiece[][] pieces) {
-		for(int i=0; i<pieces.length; i++) {
+		for (int i = 0; i < pieces.length; i++) {
 			System.out.print((8 - i) + " ");
-			for(int j=0; j<pieces.length; j++) {
+			for (int j = 0; j < pieces.length; j++) {
 				printPiece(pieces[i][j], false);
 			}
 			System.out.println();
 		}
 		System.out.println("  a b c d e f g h");
 	}
-	
+
 	public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
-		for(int i=0; i<pieces.length; i++) {
+		for (int i = 0; i < pieces.length; i++) {
 			System.out.print((8 - i) + " ");
-			for(int j=0; j<pieces.length; j++) {
+			for (int j = 0; j < pieces.length; j++) {
 				printPiece(pieces[i][j], possibleMoves[i][j]);
 			}
 			System.out.println();
@@ -118,6 +123,4 @@ public class UI {
 		System.out.println(Arrays.toString(black.toArray()));
 		System.out.print(ANSI_RESET);
 	}
-	
-	
 }
